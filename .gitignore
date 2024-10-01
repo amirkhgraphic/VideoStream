@@ -1,5 +1,6 @@
 .venv/
 .idea/
 meida/
+__pycache__/
 
 local_*
