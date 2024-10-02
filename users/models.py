@@ -53,4 +53,4 @@ class User(AbstractBaseUser, PermissionsMixin):
                 img.save(avatar_path)
 
     def __str__(self):
-        return f"@{self.username}"
+        return f"@{self.email}"

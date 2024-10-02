@@ -3,4 +3,5 @@
 meida/
 __pycache__/
 
+db.sqlite3
 local_*

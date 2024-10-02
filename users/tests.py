@@ -13,7 +13,7 @@ class UserListAPIViewTest(APITestCase):
         )
 
         # Obtain JWT token for the test user
-        url = reverse('token_obtain_pair')  # JWT token obtain URL
+        url = reverse('users:token_obtain_pair')  # JWT token obtain URL
         response = self.client.post(url, {
             'email': self.user.email,
             'password': 'testpassword123'
@@ -23,7 +23,7 @@ class UserListAPIViewTest(APITestCase):
     def test_user_list_authenticated(self):
         # Use the token to authenticate the request
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
-        url = reverse('users-list')  # UserListAPIView URL
+        url = reverse('users:users-list')  # UserListAPIView URL
         response = self.client.get(url)
 
         # Check if the request was successful and returned the correct status
@@ -32,7 +32,7 @@ class UserListAPIViewTest(APITestCase):
 
     def test_user_list_unauthenticated(self):
         # Test access without authentication
-        url = reverse('users-list')
+        url = reverse('users:users-list')
         response = self.client.get(url)
 
         # Check if it returns 401 Unauthorized
