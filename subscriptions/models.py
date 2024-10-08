@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -18,8 +20,14 @@ class UserSubscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(blank=True)
     active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if self.plan and self.plan.duration_days:
+            self.end_date = self.start_date + timedelta(days=self.plan.duration_days)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user} - {self.plan.name}"
