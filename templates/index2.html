@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Video Stream</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            display: block;
+        }
+        #viewer-count {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Video Stream</h1>
+    <video id="video-player" controls>
+        <source src="http://localhost:8000/media/videos/Rec_0002.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div id="viewer-count">Current Viewers: <span id="viewer-number">0</span></div>
+
+    <script>
+        // WebSocket connection to the server
+        const videoId = 2; // Set your video ID here (replace with dynamic ID if needed)
+        const websocket = new WebSocket(`ws://localhost:8000/ws/video/${videoId}/`);
+
+        // Get the viewer number element
+        const viewerCountElement = document.getElementById('viewer-number');
+
+        // Handle WebSocket connection open
+        websocket.onopen = function(event) {
+            console.log("WebSocket connection opened.");
+        };
+
+        // Handle messages received from the server
+        websocket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            // If the message contains the number of viewers, update the display
+            if (data.viewers) {
+                viewerCountElement.textContent = data.viewers;
+            }
+        };
+
+        // Handle WebSocket errors
+        websocket.onerror = function(event) {
+            console.error("WebSocket error observed:", event);
+        };
+
+        // Handle WebSocket connection close
+        websocket.onclose = function(event) {
+            console.log("WebSocket connection closed.");
+        };
+    </script>
+</body>
+</html>
